@@ -2,12 +2,13 @@
   border: none;
   padding: 0;
   border-radius: 50%;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   font-size: 3em;
   color: #fff;
   margin: 0;
-  background: red;
+  /* background: red; */
+  background: white;
   position: relative;
   z-index: 999;
   display: inline-block;
@@ -23,12 +24,15 @@
   -ms-user-select: none;
   user-select: none;
   background-image: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn:active .pulse-ring {
   content: '';
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   background: #189BFF;
   border: 5px solid #189BFF;
   border-radius: 50%;
@@ -36,6 +40,9 @@
   top: 0;
   left: 0;
   animation: pulsate infinite 1.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -56,6 +63,6 @@
   justify-content: center;
 }
 
-.m-left {
+/* .m-left {
   margin-left: 300px;
-}
+} */
