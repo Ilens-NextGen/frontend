@@ -1,9 +1,11 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Terms = () => {
   return (
     <div className="bg-[#1219D2] h-screen w-full p-5 text-white">
     <header className="flex justify-between items-center">
+      <Link to="/settings">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_500_6911)">
         <path d="M33.5675 6.66815H17.2841C16.0507 6.6755 14.8635 7.1385 13.9508 7.96815L13.7841 8.15148L3.78413 20.6182C3.51708 20.9501 3.38727 21.3717 3.42137 21.7963C3.45546 22.221 3.65087 22.6164 3.96746 22.9015L13.9675 32.0348C14.8802 32.8645 16.0674 33.3275 17.3008 33.3348H33.5841C34.3946 33.3393 35.1739 33.0227 35.7516 32.4543C36.3294 31.8859 36.6587 31.1119 36.6675 30.3015V9.70149C36.6631 9.29876 36.5795 8.90083 36.4213 8.53043C36.2632 8.16003 36.0336 7.82441 35.7457 7.54273C35.4579 7.26106 35.1173 7.03884 34.7436 6.88878C34.3698 6.73872 33.9702 6.66375 33.5675 6.66815ZM33.3341 30.0015H17.2841C16.8711 30.0004 16.4731 29.846 16.1675 29.5682L7.28413 21.4848L16.2508 10.3682C16.544 10.1329 16.9082 10.0037 17.2841 10.0015H33.3341V30.0015Z" fill="#FCFDFE"/>
@@ -15,6 +17,8 @@ const Terms = () => {
         </clipPath>
         </defs>
       </svg>
+      </Link>
+
     </header>
     <main className='h-[75%] pb-5 overflow-y-auto my-4'>
       <h3 className='font-bold text-2xl'>Terms & Condition</h3>
@@ -37,13 +41,13 @@ const Terms = () => {
       <p>We reserve the right to modify these terms and conditions at any time. Changes will be effective immediately upon posting. Continued use of the App after modifications constitutes acceptance of the app.</p>
     </main>
 
-    <div className='flex'>
-      <button className="group active:border-2 active:border-black h-[100] w-[150px] px-3 py-2 rounded-full bg-white mx-auto">
-        <div className="group-active:bg-[#1016D8] bg-[#ECDADA] rounded-3xl flex flex-col items-center justify-center p-2">
-          <p className='font-bold text-black'>Submit</p>
-        </div>
-      </button>
-    </div>
+      <Link className='flex' to="/home">
+        <button className="group active:border-2 active:border-black h-[100] w-[150px] px-3 py-2 rounded-full bg-white mx-auto">
+          <div className="group-active:bg-[#1016D8] bg-[#ECDADA] rounded-3xl flex flex-col items-center justify-center p-2">
+            <p className='font-bold text-black'>Submit</p>
+          </div>
+        </button>
+      </Link>
 
   </div>
   )
