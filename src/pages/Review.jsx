@@ -46,7 +46,7 @@ const Review = () => {
             </div>
         </header>
         <body>
-            <section className='h-[60vh] overflow-y-auto'>
+            <section className='h-[60vh] overflow-y-auto no-scrollbar'>
                 <div>
                     <div className='mb-3 flex items-center justify-between'>
                         <div className='w-[90%] flex flex-col gap-1'>

@@ -20,7 +20,7 @@ const Terms = () => {
       </Link>
 
     </header>
-    <main className='h-[75%] pb-5 overflow-y-auto my-4'>
+    <main className='h-[75%] pb-5 no-scrollbar overflow-y-auto my-4'>
       <h3 className='font-bold text-2xl'>Terms & Condition</h3>
       <h3 className='text-2xl mt-2'>Acceptance of App</h3>
       <p>By accessing or using the Vision-Impaired App ("iLENS"), you agree to abide by these terms and conditions. If you do not agree with any part of these terms, please refrain from using the App.</p>
