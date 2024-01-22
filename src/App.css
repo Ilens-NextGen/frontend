@@ -29,7 +29,7 @@
   align-items: center;
 }
 
-.btn:active .pulse-ring {
+.btn.active:active .pulse-ring {
   content: '';
   width: 150px;
   height: 150px;
@@ -43,6 +43,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#monitor.active > div {
+  background: #1016D8;
+}
+
+#monitor > div {
+  background: #ECDADA;
+}
+
+#monitor:active > div {
+  background: #1016D8;
 }
 
 
