@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import { socket } from '../socket.jsx';
+import { useEffect } from 'react';
+import { addHandler, socket } from '../socket.jsx';
 
 
-export default function Socket() {
+export default function SocketSetup() {
     useEffect(() => {
         function onConnect() {
             console.log('Connected to server');
@@ -20,25 +20,24 @@ export default function Socket() {
             console.error(err);
         }
 
-
-        socket.on('connect', onConnect);
-        socket.on('disconnect', onDisconnect);
-        socket.on('server-id', onServerID);
-        socket.on('error', onError);
-        socket.on('connect_error', onError);
-        socket.on('connect_timeout', onError);
+        const removeHandlers = [
+            addHandler('connect', onConnect),
+            addHandler('disconnect', onDisconnect),
+            addHandler('server-id', onServerID),
+            addHandler('error', onError),
+            addHandler('connect_error', onError),
+            addHandler('connect_timeout', onError),
+        ];
+        if (!socket.connected) {
+            // socket.connect();
+        }
 
         return () => {
-            socket.off('connect', onConnect);
-            socket.off('disconnect', onDisconnect);
-            socket.off('server-id', onServerID);
-            socket.off('error', onError);
-            socket.off('connect_error', onError);
-            socket.off('connect_timeout', onError);
+            removeHandlers.forEach((removeHandler) => removeHandler());
         };
     }, []);
     return (
-        <div style={{visibility: "hidden"}}>
+        <div style={{display: "none"}}>
         </div>
     )
 }

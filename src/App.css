@@ -29,7 +29,7 @@
   align-items: center;
 }
 
-.btn.active:active .pulse-ring {
+.btn.active .pulse-ring {
   content: '';
   width: 150px;
   height: 150px;
@@ -44,19 +44,6 @@
   justify-content: center;
   align-items: center;
 }
-
-#monitor.active > div {
-  background: #1016D8;
-}
-
-#monitor > div {
-  background: #ECDADA;
-}
-
-#monitor:active > div {
-  background: #1016D8;
-}
-
 
 @keyframes pulsate {
   0% {

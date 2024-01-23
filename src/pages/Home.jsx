@@ -1,19 +1,23 @@
-import React from 'react'
-import wallpaper from '../assets/MESH2.png'
 import { Link } from 'react-router-dom'
-import Microphone from '../component/Microphone'
-import { useEffect } from 'react'
-import { socket } from '../socket.jsx'
-import Socket from '../component/Socket.jsx'
-import Webcam from '../component/Webcam.jsx'
+import Microphone, { MicrophoneSetup } from '../component/Microphone'
+import SocketSetup from '../component/Socket.jsx'
+import { WebcamSetup } from '../component/Webcam.jsx'
 import Monitoring from '../component/Monitoring.jsx'
+import { useEffect, useRef } from 'react'
 
 const Home = () => {
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    const footer = footerRef.current;
+    footer.scrollIntoView({ behavior: "smooth" });
+  }, [footerRef]);
 
   return (
     <>
-      <Socket />
-      <Webcam />
+      <SocketSetup />
+      <MicrophoneSetup />
+      <WebcamSetup />
       <div id="main" className="bg-[#1219D2] h-screen w-full p-5 flex flex-col justify-between">
         <header className="flex justify-between items-center">
           <svg width={29} height={32} viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -36,7 +40,7 @@ const Home = () => {
 
           </div>
         </main>
-        <footer className="flex justify-center gap-5">
+        <footer className="flex justify-center gap-5" ref={footerRef}>
           <Monitoring />
           <button className="group active:border-2 active:border-black  h-[80px] w-[80px] p-2 rounded-full bg-white">
             <div className="group-active:bg-[#1016D8] bg-[#ECDADA] rounded-3xl flex flex-col items-center justify-center p-2 shadow-lg">
