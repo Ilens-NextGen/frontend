@@ -20,7 +20,6 @@ export default function Socket() {
             console.error(err);
         }
 
-
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('server-id', onServerID);

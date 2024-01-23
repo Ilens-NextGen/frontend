@@ -8,3 +8,7 @@ export const socket = io(
     transports: ['websocket', 'polling', 'flashsocket'],
     }
 );
+
+export function addHandler() {
+    
+}

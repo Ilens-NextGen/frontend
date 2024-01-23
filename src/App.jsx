@@ -2,11 +2,9 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
-  Link,
 } from "react-router-dom";
 import './App.css'
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import { socket } from './socket';
 
 import Welcome from "./pages/Welcome";
@@ -44,7 +42,6 @@ const router = createBrowserRouter([
   },
 ]);
 const App=() => {
-
   useEffect(() => {
     function onConnect() {
       console.log('Connected to server');
