@@ -29,7 +29,7 @@ export default function SocketSetup() {
             addHandler('connect_timeout', onError),
         ];
         if (!socket.connected) {
-            // socket.connect();
+            socket.connect();
         }
 
         return () => {
