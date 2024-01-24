@@ -29,7 +29,7 @@ export declare type WebCamState = UseBoundStore<StoreApi<{
 export declare type MicrophoneCaptureState = UseBoundStore<StoreApi<{
   captured?: Blob;
   capturing:boolean;
-  capture: (stream: MediaStream) => () => Blob;
+  capture: (stream: MediaStream, callback: (blob: Blob) => void) => () => void;
   clearCapture: () => void;
 }>>;
 

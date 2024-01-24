@@ -31,9 +31,9 @@ export default function Monitoring() {
     new Audio(monitoringStarted).play();
     setIsActive(true);
     async function sendClip() {
-      // console.log(`stream active: ${stream.active}`)
       const clip = await capture(stream, 1000)
-      console.log("Sending clip");
+      console.log()
+      console.log(`Sending clip ${clip}`);
       socket.emit("detect", clip);
     }
     sendClip();
@@ -51,11 +51,7 @@ export default function Monitoring() {
   }
 
   function toggleMonitoring() {
-    if (isActive) {
-      stopMonitoring();
-    } else {
-      startMonitoring();
-    }
+    isActive ? stopMonitoring() : startMonitoring();
   }
   return (
     <button

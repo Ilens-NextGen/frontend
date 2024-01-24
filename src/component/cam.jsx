@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import snapshot from "../assets/snapshot.mp3";
 
 export const webcam = {
 
@@ -72,7 +71,6 @@ export const webcam = {
                 chunks.push(ev.data);
             };
             recorder.onstop = () => {
-                // console.log(chunks);
                 resolve(new Blob(chunks, { type: "video/webm" }));
             }
             recorder.onerror = (err) => {
@@ -98,7 +96,6 @@ export const useWebcamCapture = create((set) => ({
     capturing: false,
     capture: async (stream, duration) => {
         set({ capturing: true });
-        new Audio(snapshot).play();
         const clip = await webcam.record(stream, duration);
         set({ capturing: false });
         return clip;

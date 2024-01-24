@@ -35,17 +35,11 @@ export function WebcamSetup() {
     }
     startStream();
     return () => {
-      webcam.releaseStream(stream);
+      stream && webcam.releaseStream(stream);
       clearStream();
       clearDevice();
     };
-  }, [
-    clearDevice,
-    clearStream,
-    selectDevice,
-    setPermission,
-    setStream,
-    stream,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return <div style={{ display: "none" }} />;
 }

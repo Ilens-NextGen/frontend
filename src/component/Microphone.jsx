@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addHandler, socket } from "../socket.jsx";
 import { useWebcamCapture, useWebcam } from "./cam.jsx";
 import { microphone, useMicrophone, useMicrophoneCapture } from "./mic.jsx";
@@ -19,19 +19,18 @@ export function MicrophoneSetup() {
   } = useMicrophone();
   useEffect(() => {
     async function setupDevice() {
-      microphone.getDevices().then((devices) => {
-        if (devices.length == 0) {
-          console.warn("No audio devices found");
-          setPermission(false);
-          return;
-        }
-        console.log(`Found ${devices.length} audio devices`);
-        const selected = devices[0];
-        const stream = microphone.getStream(selected);
-        selectDevice(selected);
-        setStream(stream);
-        setPermission(true);
-      });
+      const devices = await microphone.getDevices();
+      if (devices.length == 0) {
+        console.warn("No audio devices found");
+        setPermission(false);
+        return;
+      }
+      console.log(`Found ${devices.length} audio devices`);
+      const selected = devices[0];
+      const stream = await microphone.getStream(selected);
+      selectDevice(selected);
+      setStream(stream);
+      setPermission(true);
     }
     setupDevice();
 
@@ -76,18 +75,12 @@ export function MicrophoneSetup() {
 
     return () => {
       removeHandlers.forEach((removeHandler) => removeHandler());
-      microphone.releaseStream(stream);
+      stream && microphone.releaseStream(stream);
       clearDevice();
       clearStream();
     };
-  }, [
-    clearDevice,
-    clearStream,
-    selectDevice,
-    setPermission,
-    setStream,
-    stream,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return <div style={{ display: "none" }} />;
 }
 
@@ -99,7 +92,8 @@ export default function Microphone() {
     clearCapture: clearMicCapture,
   } = useMicrophoneCapture();
   /**@type {[() => Blob, (a: () => Blob) => void]} */
-  const [stopMicCapture, setStopMicCapture] = useState(null);
+  /**@type {React.MutableRefObject<() => Blob>} */
+  const stopMicCapture = useRef(null);
   const [micDevice, micStream] = useMicrophone((state) => [
     state.selectedDevice,
     state.stream,
@@ -113,8 +107,8 @@ export default function Microphone() {
     state.selectedDevice,
     state.stream,
   ]);
-  /**@type {[MediaStream, (a: MediaStream) => void]} */
-  const [recording, setRecording] = useState(false);
+  /**@type {[Blob, (...args: [Blob]) => void]} */
+  const [recording, setRecording] = useState(null);
   /**
    * mic is disabled if there is no permission or no device
    */
@@ -130,9 +124,12 @@ export default function Microphone() {
         camCapture(stream, 1000).then((clip) => {
           console.log("Got clip");
           clearCamCapture();
-          console.log("Sending query");
+          console.log(
+            `Sending query with audio of ${
+              recording.size / 1024
+            }kb and clip of ${clip.size / 1024}kb`
+          );
           setRecording(null);
-          console.log(clip);
           socket.emit("query", recording, clip, "url");
         });
       });
