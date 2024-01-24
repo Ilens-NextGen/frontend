@@ -88,7 +88,10 @@ export default function Microphone() {
     clearCapture: clearCamCapture,
   } = useWebcamCapture();
   const [camDevice] = useWebcam((state) => [state.selectedDevice]);
+  /**@type {[MediaStream, (a: MediaStream) => void]} */
   const [micStream, setMicStream] = useState(null);
+  /**@type {[MediaStream, (a: MediaStream) => void]} */
+  const [camStream, setCamStream] = useState(null);
   const [recording, setRecording] = useState(false);
   /**
    * mic is disabled if there is no permission or no device
@@ -100,7 +103,8 @@ export default function Microphone() {
 
   useEffect(() => {
     if (recording && camDevice) {
-      webcam.getStream(camDevice).then((stream) => {
+      console.log("Getting clip");
+      Promise.resolve(camStream).then((stream) => {
         camCapture(stream, 1000).then((clip) => {
           console.log("Got clip");
           webcam.releaseStream(stream);
@@ -108,17 +112,20 @@ export default function Microphone() {
           console.log("Sending query");
           setRecording(null);
           setMicStream(null);
+          setCamStream(null);
+          // console.log(clip)
           socket.emit("query", recording, clip, "url");
         });
       });
     }
-  }, [recording, camDevice, camCapture, clearCamCapture]);
+  }, [recording, camDevice, camCapture, clearCamCapture, camStream]);
 
   async function startRecording() {
     if (micDisabled || isActive) return;
     if (!micStream) {
       const stream = await microphone.getStream(micDevice);
       setMicStream(stream);
+      setCamStream(await webcam.getStream(camDevice));
       const stop = micCapture(stream);
       setStopMicCapture(() => stop);
       setIsActive(true);

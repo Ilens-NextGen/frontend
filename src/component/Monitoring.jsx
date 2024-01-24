@@ -29,14 +29,18 @@ export default function Monitoring() {
     setIsActive(true);
     const stream = await webcam.getStream(selectedDevice);
     setStream(stream);
-    function sendClip() {
-      const clip = capture(stream, 1000);
+    async function sendClip() {
+      // console.log(`stream active: ${stream.active}`)
+      const clip = await capture(stream, 1000)
       console.log("Sending clip");
       socket.emit("detect", clip);
     }
-    const id = setInterval(sendClip, 5000);
-    sendClip();
-    setIntervalId(id);
+    // sendClip();
+    setTimeout(() => {
+      sendClip();
+      const id = setInterval(sendClip, 5000);
+      setIntervalId(id);
+    }, 1500);
   }
 
   function stopMonitoring() {

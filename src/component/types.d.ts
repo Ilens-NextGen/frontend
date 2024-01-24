@@ -10,7 +10,7 @@ export declare type SelectedCamState = UseBoundStore<StoreApi<{
 export declare type WebCamCaptureState = UseBoundStore<StoreApi<{
     captured?: Blob;
     capturing:boolean;
-    capture: (stream: MediaStream, duration: number) => Blob;
+    capture: (stream: MediaStream, duration: number) => Promise<Blob>;
     clearCapture: () => void;
 }>>;
 

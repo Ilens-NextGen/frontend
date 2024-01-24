@@ -68,9 +68,11 @@ export const webcam = {
             const recorder = new MediaRecorder(stream);
             const chunks = [];
             recorder.ondataavailable = (ev) => {
+                // console.log("Got video data", ev.data);
                 chunks.push(ev.data);
             };
             recorder.onstop = () => {
+                // console.log(chunks);
                 resolve(new Blob(chunks, { type: "video/webm" }));
             }
             recorder.onerror = (err) => {
