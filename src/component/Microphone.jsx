@@ -5,6 +5,8 @@ import { microphone, useMicrophone, useMicrophoneCapture } from "./mic.jsx";
 import noAudio from "../assets/no-audio.wav";
 import longAudio from "../assets/long-audio.wav";
 import shortAudio from "../assets/short-audio.wav";
+import recordingStarted from "../assets/recording-started.mp3";
+import recordingStopped from "../assets/recording-stopped.mp3";
 
 export function MicrophoneSetup() {
   const {
@@ -139,19 +141,20 @@ export default function Microphone() {
 
   async function startRecording() {
     if (micDisabled || isActive) return;
-    if (!micStream) {
-      const stop = micCapture(micStream);
-      setStopMicCapture(() => stop);
+    if (micStream) {
+      new Audio(recordingStarted).play();
+      const stop = micCapture(micStream, (blob) => setRecording(blob));
+      stopMicCapture.current = stop;
       setIsActive(true);
     }
   }
 
   async function stopRecording() {
     if (micDisabled || !isActive) return;
-    if (stopMicCapture) {
-      const blob = stopMicCapture();
+    if (stopMicCapture.current) {
+      new Audio(recordingStopped).play();
+      stopMicCapture.current();
       clearMicCapture();
-      setRecording(blob);
       setIsActive(false);
     }
   }

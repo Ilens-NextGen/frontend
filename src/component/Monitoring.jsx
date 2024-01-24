@@ -1,6 +1,8 @@
 import { addHandler, socket } from "../socket";
 import { useEffect, useState } from "react";
 import { useWebcamCapture, useWebcam } from "./cam";
+import monitoringStarted from "../assets/monitoring-started.mp3";
+import monitoringStopped from "../assets/monitoring-stopped.mp3";
 
 export default function Monitoring() {
   const [isActive, setIsActive] = useState(false);
@@ -26,6 +28,7 @@ export default function Monitoring() {
   async function startMonitoring() {
     if (!selectedDevice) return;
     console.log("Starting monitoring");
+    new Audio(monitoringStarted).play();
     setIsActive(true);
     async function sendClip() {
       // console.log(`stream active: ${stream.active}`)
@@ -40,6 +43,7 @@ export default function Monitoring() {
 
   function stopMonitoring() {
     if (!selectedDevice) return;
+    new Audio(monitoringStopped).play();
     console.log("Stopping monitoring");
     clearInterval(intervalId);
     setIsActive(false);
