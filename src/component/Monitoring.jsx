@@ -1,11 +1,11 @@
 import { addHandler, socket } from "../socket";
 import { useEffect, useState } from "react";
-import { useWebcamCapture, useWebcam, webcam } from "./cam";
+import { useWebcamCapture, useWebcam } from "./cam";
 
 export default function Monitoring() {
   const [isActive, setIsActive] = useState(false);
   const { capture, capturing, clearCapture } = useWebcamCapture();
-  const { selectedDevice, setStream, stream, clearStream } = useWebcam();
+  const { selectedDevice, stream } = useWebcam();
   const [intervalId, setIntervalId] = useState(null);
   const disabled = (capturing && !isActive) || !selectedDevice;
   const classes =
@@ -27,20 +27,15 @@ export default function Monitoring() {
     if (!selectedDevice) return;
     console.log("Starting monitoring");
     setIsActive(true);
-    const stream = await webcam.getStream(selectedDevice);
-    setStream(stream);
     async function sendClip() {
       // console.log(`stream active: ${stream.active}`)
       const clip = await capture(stream, 1000)
       console.log("Sending clip");
       socket.emit("detect", clip);
     }
-    // sendClip();
-    setTimeout(() => {
-      sendClip();
-      const id = setInterval(sendClip, 5000);
-      setIntervalId(id);
-    }, 1500);
+    sendClip();
+    const id = setInterval(sendClip, 5000);
+    setIntervalId(id); 
   }
 
   function stopMonitoring() {
@@ -48,8 +43,6 @@ export default function Monitoring() {
     console.log("Stopping monitoring");
     clearInterval(intervalId);
     setIsActive(false);
-    webcam.releaseStream(stream);
-    clearStream();
     clearCapture();
   }
 

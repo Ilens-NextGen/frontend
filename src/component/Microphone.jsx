@@ -1,27 +1,35 @@
 import { useEffect, useState } from "react";
 import { addHandler, socket } from "../socket.jsx";
-import { useWebcamCapture, useWebcam, webcam } from "./cam.jsx";
-import {
-  microphone,
-  useMicrophone,
-  useMicrophoneCapture,
-} from "./mic.jsx";
+import { useWebcamCapture, useWebcam } from "./cam.jsx";
+import { microphone, useMicrophone, useMicrophoneCapture } from "./mic.jsx";
 import noAudio from "../assets/no-audio.wav";
 import longAudio from "../assets/long-audio.wav";
 import shortAudio from "../assets/short-audio.wav";
 
 export function MicrophoneSetup() {
-  const { selectDevice, setPermission } = useMicrophone();
+  const {
+    stream,
+    setStream,
+    setPermission,
+    selectDevice,
+    clearDevice,
+    clearStream,
+  } = useMicrophone();
   useEffect(() => {
     async function setupDevice() {
-      const devices = await microphone.getDevices();
-      if (devices.length == 0) {
-        console.log("No audio devices found");
-        return;
-      }
-      console.log(`Found ${devices.length} audio devices`);
-      selectDevice(devices[0]);
-      setPermission(await microphone.hasPermission());
+      microphone.getDevices().then((devices) => {
+        if (devices.length == 0) {
+          console.warn("No audio devices found");
+          setPermission(false);
+          return;
+        }
+        console.log(`Found ${devices.length} audio devices`);
+        const selected = devices[0];
+        const stream = microphone.getStream(selected);
+        selectDevice(selected);
+        setStream(stream);
+        setPermission(true);
+      });
     }
     setupDevice();
 
@@ -66,10 +74,19 @@ export function MicrophoneSetup() {
 
     return () => {
       removeHandlers.forEach((removeHandler) => removeHandler());
+      microphone.releaseStream(stream);
+      clearDevice();
+      clearStream();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return <div style={{ visibility: "hidden" }} />;
+  }, [
+    clearDevice,
+    clearStream,
+    selectDevice,
+    setPermission,
+    setStream,
+    stream,
+  ]);
+  return <div style={{ display: "none" }} />;
 }
 
 export default function Microphone() {
@@ -81,17 +98,20 @@ export default function Microphone() {
   } = useMicrophoneCapture();
   /**@type {[() => Blob, (a: () => Blob) => void]} */
   const [stopMicCapture, setStopMicCapture] = useState(null);
-  const [micDevice] = useMicrophone((state) => [state.selectedDevice]);
+  const [micDevice, micStream] = useMicrophone((state) => [
+    state.selectedDevice,
+    state.stream,
+  ]);
   const {
     capture: camCapture,
     capturing: camCapturing,
     clearCapture: clearCamCapture,
   } = useWebcamCapture();
-  const [camDevice] = useWebcam((state) => [state.selectedDevice]);
+  const [camDevice, camStream] = useWebcam((state) => [
+    state.selectedDevice,
+    state.stream,
+  ]);
   /**@type {[MediaStream, (a: MediaStream) => void]} */
-  const [micStream, setMicStream] = useState(null);
-  /**@type {[MediaStream, (a: MediaStream) => void]} */
-  const [camStream, setCamStream] = useState(null);
   const [recording, setRecording] = useState(false);
   /**
    * mic is disabled if there is no permission or no device
@@ -107,13 +127,10 @@ export default function Microphone() {
       Promise.resolve(camStream).then((stream) => {
         camCapture(stream, 1000).then((clip) => {
           console.log("Got clip");
-          webcam.releaseStream(stream);
           clearCamCapture();
           console.log("Sending query");
           setRecording(null);
-          setMicStream(null);
-          setCamStream(null);
-          // console.log(clip)
+          console.log(clip);
           socket.emit("query", recording, clip, "url");
         });
       });
@@ -123,10 +140,7 @@ export default function Microphone() {
   async function startRecording() {
     if (micDisabled || isActive) return;
     if (!micStream) {
-      const stream = await microphone.getStream(micDevice);
-      setMicStream(stream);
-      setCamStream(await webcam.getStream(camDevice));
-      const stop = micCapture(stream);
+      const stop = micCapture(micStream);
       setStopMicCapture(() => stop);
       setIsActive(true);
     }
