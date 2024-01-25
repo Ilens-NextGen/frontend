@@ -33,8 +33,8 @@ export default function Monitoring() {
     async function sendClip() {
       const clip = await capture(stream, 1000)
       console.log()
-      console.log(`Sending clip ${clip}`);
-      socket.emit("detect", clip);
+      console.log(`Sending ${clip.type} video of ${clip.size / 1024}kb`);
+      socket.emit("detect", {raw: clip, mimetype: clip.type});
     }
     sendClip();
     const id = setInterval(sendClip, 5000);

@@ -125,12 +125,17 @@ export default function Microphone() {
           console.log("Got clip");
           clearCamCapture();
           console.log(
-            `Sending query with audio of ${
+            `Sending query with ${recording.type} audio of ${
               recording.size / 1024
-            }kb and clip of ${clip.size / 1024}kb`
+            }kb and ${clip.type} video of ${clip.size / 1024}kb`
           );
           setRecording(null);
-          socket.emit("query", recording, clip, "url");
+          socket.emit(
+            "query",
+            { raw: recording, mimetype: recording.type },
+            { raw: clip, mimetype: clip.type },
+            "url"
+          );
         });
       });
     }

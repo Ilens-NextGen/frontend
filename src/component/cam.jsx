@@ -71,7 +71,7 @@ export const webcam = {
                 chunks.push(ev.data);
             };
             recorder.onstop = () => {
-                resolve(new Blob(chunks));
+                resolve(new Blob(chunks, {type: recorder.mimeType}));
             }
             recorder.onerror = (err) => {
                 console.error(err);

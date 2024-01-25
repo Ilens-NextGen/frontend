@@ -71,7 +71,7 @@ export const microphone = {
     const recorder = new MediaRecorder(stream);
     const chunks = [];
     recorder.ondataavailable = (ev) => {
-      console.log("Got audio data", ev.data);
+      // console.log("Got audio data", ev.data);
       if (ev.data.size > 0) chunks.push(ev.data);
     };
     recorder.onerror = (err) => {
@@ -83,7 +83,6 @@ export const microphone = {
     recorder.onstop = () => {
       console.log("Stopped recording audio");
       const blob = new Blob(chunks, { type: recorder.mimeType });
-      console.log("Audio blob", blob);
       chunks.length = 0;
       callback(blob);
     };
