@@ -64,7 +64,7 @@ export const webcam = {
         */
     record(stream, duration) {
         return new Promise((resolve, reject) => {
-            const recorder = new MediaRecorder(stream);
+            const recorder = new MediaRecorder(stream, {mimeType: "video/webm"});
             const chunks = [];
             recorder.ondataavailable = (ev) => {
                 // console.log("Got video data", ev.data);
