@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Terms = () => {
   return (
-    <div className="bg-[#1219D2] h-screen w-full p-5 text-white">
+    <div className="bg-[#1219D2] w-full p-5 text-white h-full">
     <header className="flex justify-between items-center">
       <Link to="/settings">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,7 +20,7 @@ const Terms = () => {
       </Link>
 
     </header>
-    <main className='h-[75%] pb-5 no-scrollbar overflow-y-auto my-4'>
+    <main id='termsScrollable' className='pb-5 no-scrollbar overflow-y-scroll my-4'>
       <h3 className='font-bold text-2xl'>Terms & Condition</h3>
       <h3 className='text-2xl mt-2'>Acceptance of App</h3>
       <p>By accessing or using the Vision-Impaired App ("iLENS"), you agree to abide by these terms and conditions. If you do not agree with any part of these terms, please refrain from using the App.</p>

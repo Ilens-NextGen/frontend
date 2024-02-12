@@ -3,22 +3,14 @@ import Microphone, { MicrophoneSetup } from '../component/Microphone'
 import SocketSetup from '../component/Socket.jsx'
 import { WebcamSetup } from '../component/Webcam.jsx'
 import Monitoring from '../component/Monitoring.jsx'
-import { useEffect, useRef } from 'react'
 
 const Home = () => {
-  const footerRef = useRef(null);
-
-  useEffect(() => {
-    const footer = footerRef.current;
-    footer.scrollIntoView({ behavior: "smooth" });
-  }, [footerRef]);
-
+  
   return (
-    <>
+      <div className="bg-[#1219D2] w-full p-5 flex flex-col justify-between h-full">
       <SocketSetup />
       <MicrophoneSetup />
       <WebcamSetup />
-      <div id="main" className="bg-[#1219D2] h-screen w-full p-5 flex flex-col justify-between">
         <header className="flex justify-between items-center">
           <svg width={29} height={32} viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" clipRule="evenodd" d="M0 7.66417C0 3.43136 3.43136 0 7.66417 0H21.6114C24.9966 0 27.8693 2.1948 28.8839 5.23905H18.3976C16.2812 5.23905 14.5656 6.95474 14.5656 9.07114V11.726H12.6991C12.5244 11.726 12.355 11.7857 12.2188 11.8952L0 21.7215V7.66417ZM18.3976 26.7624H28.8834C27.8683 29.8059 24.9961 32 21.6114 32H7.66417C3.43137 32 0 28.5686 0 24.3358V23.1928C5.14982 20.216 10.9325 17.3276 14.5656 16.4367V22.9304C14.5656 25.0468 16.2812 26.7624 18.3976 26.7624ZM17.3895 16.861C16.7898 16.861 16.3037 16.3749 16.3037 15.7752V12.099C16.3037 11.4993 16.7898 11.0132 17.3895 11.0132H19.3677V16.861H17.3895Z" fill="#FCFCFF" />
@@ -40,7 +32,7 @@ const Home = () => {
 
           </div>
         </main>
-        <footer className="flex justify-center gap-5" ref={footerRef}>
+        <footer className="flex justify-center gap-5">
           <Monitoring />
           <button className="group active:border-2 active:border-black  h-[80px] w-[80px] p-2 rounded-full bg-white">
             <div className="group-active:bg-[#1016D8] bg-[#ECDADA] rounded-3xl flex flex-col items-center justify-center p-2 shadow-lg">
@@ -53,7 +45,7 @@ const Home = () => {
           </button>
         </footer>
       </div>
-    </>
+    
   )
 }
 

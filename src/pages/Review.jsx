@@ -1,10 +1,9 @@
-import React from 'react'
 import Ratings from '../component/Ratings'
 import { Link } from 'react-router-dom'
 const Review = () => {
   return (
-    <div className='h-screen w-full bg-[#1219D2] p-5 text-white'>
-        <header>
+    <div className='w-full bg-[#1219D2] p-5 text-white h-full'>
+        <div>
             <div className='border p-1 flex justify-center relative'>
                 <Link to="/settings">
                     <svg className='absolute left-1' width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,9 +43,9 @@ const Review = () => {
                 </div>
                 <p className='text-md'>Based on 127 ratings</p>
             </div>
-        </header>
-        <body>
-            <section className='h-[60vh] overflow-y-auto no-scrollbar'>
+        </div>
+        <main className=''>
+            <section id='reviewScrollable' className='overflow-y-scroll no-scrollbar'>
                 <div>
                     <div className='mb-3 flex items-center justify-between'>
                         <div className='w-[90%] flex flex-col gap-1'>
@@ -97,7 +96,7 @@ const Review = () => {
                 </div>
                 <p className='mx-auto'>Say a review</p>
             </div>
-        </body>
+        </main>
 
     </div>
   )

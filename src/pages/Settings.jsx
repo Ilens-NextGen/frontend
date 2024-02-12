@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Settings = () => {
   return (
-    <div id="main" className="bg-[#1219D2] h-screen w-full p-5 text-white">
+    <div id="main" className="bg-[#1219D2] w-full p-5 text-white h-full">
     <header className="">
       <Link to="/home">
         <svg width={29} height={32} viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
