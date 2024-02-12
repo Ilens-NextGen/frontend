@@ -13,10 +13,10 @@ body{
   font-size: 16px;
 }
 #reviewScrollable{
-  height: calc(100vh - 250px);
+  height: calc(100vh - 300px);
 }
 #termsScrollable{
-  height: calc(100vh - 180px);
+  height: calc(100vh - 250px);
 }
 
 .no-scrollbar::-webkit-scrollbar { 
