@@ -11,9 +11,8 @@ export const webcam = {
      */
     async getStream(device) {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: device.id } });
-        console.log(`Got webcam stream '${
-            stream.id.slice(0, 8)
-        }...' for device '${device.label}'`);
+        console.log(`Got webcam stream '${stream.id.slice(0, 8)
+            }...' for device '${device.label}'`);
         return stream;
     },
     /**
@@ -57,21 +56,21 @@ export const webcam = {
     },
 
     /**
-        * 
-        * @param {MediaStream} stream 
-        * @param {int} duration 
-        * @returns {Promise<Blob>}
-        */
+     * 
+     * @param {MediaStream} stream 
+     * @param {int} duration 
+     * @returns {Promise<Blob>}
+    */
     record(stream, duration) {
         return new Promise((resolve, reject) => {
-            const recorder = new MediaRecorder(stream, {mimeType: "video/webm;codecs=vp9"});
+            const recorder = new MediaRecorder(stream, { mimeType: "video/webm;codecs=vp9" });
             const chunks = [];
             recorder.ondataavailable = (ev) => {
                 // console.log("Got video data", ev.data);
                 chunks.push(ev.data);
             };
             recorder.onstop = () => {
-                resolve(new Blob(chunks, {type: recorder.mimeType}));
+                resolve(new Blob(chunks, { type: recorder.mimeType }));
             }
             recorder.onerror = (err) => {
                 console.error(err);
@@ -87,6 +86,28 @@ export const webcam = {
                 console.log("Stopped recording video");
             }, duration);
         });
+    },
+    /**
+     * Take snapshots from the webcam
+     * @param {MediaStream} stream a video stream
+     * @param {number} count of snapshots
+     * @param {number} interval the time between snapshots
+     * @returns {Promise<Blob[]>}
+     */
+    async snapshot(stream, count, interval) {
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.play();
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        const snapshots = [];
+        for (let i = 0; i < count; i++) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => snapshots.push(blob));
+            await new Promise((resolve) => setTimeout(resolve, interval));
+        }
+        video.pause();
+        return snapshots;
     }
 }
 
@@ -99,6 +120,12 @@ export const useWebcamCapture = create((set) => ({
         const clip = await webcam.record(stream, duration);
         set({ capturing: false });
         return clip;
+    },
+    snap: async (stream, count, interval) => {
+        set({ capturing: true });
+        const clips = await webcam.snapshot(stream, count, interval);
+        set({ capturing: false });
+        return clips;
     },
     clearCapture: () => set({ captured: null, capturing: false }),
 }));

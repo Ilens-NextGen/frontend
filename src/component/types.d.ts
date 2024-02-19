@@ -11,6 +11,7 @@ export declare type WebCamCaptureState = UseBoundStore<StoreApi<{
     captured?: Blob;
     capturing:boolean;
     capture: (stream: MediaStream, duration: number) => Promise<Blob>;
+    snap: (stream: MediaStream, count: number, interval: number) => Promise<Blob[]>;
     clearCapture: () => void;
 }>>;
 
