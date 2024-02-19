@@ -2,9 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { addHandler, socket } from "../socket.jsx";
 import { useWebcamCapture, useWebcam } from "./cam.jsx";
 import { microphone, useMicrophone, useMicrophoneCapture } from "./mic.jsx";
-import noAudio from "../assets/no-audio.wav";
-import longAudio from "../assets/long-audio.wav";
-import shortAudio from "../assets/short-audio.wav";
 import recordingStarted from "../assets/recording-started.mp3";
 import recordingStopped from "../assets/recording-stopped.mp3";
 
@@ -41,6 +38,13 @@ export function MicrophoneSetup() {
       const audio = new Audio(url);
       audio.play();
     }
+
+    function onText(text) {
+      console.log("Got text");
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    }
+
     function onUrl(url) {
       console.log("Got audio url");
       const audio = new Audio(url);
@@ -49,20 +53,29 @@ export function MicrophoneSetup() {
 
     function onNoAudio() {
       console.log("No audio");
-      const audio = new Audio(noAudio);
-      audio.play();
+      const utterance = new SpeechSynthesisUtterance(
+        "Oops! I think I might need a hearing aid. Didn't catch that last part, " +
+        "mind giving it another shot?"
+      );
+      speechSynthesis.speak(utterance);
     }
 
     function onLongAudio() {
       console.log("Long audio");
-      const audio = new Audio(longAudio);
-      audio.play();
+      const utterance = new SpeechSynthesisUtterance(
+        "Woah, that's a novel. Can you give me the quick version or the key details" +
+        " let's keep it snappy and effective."
+      );
+      speechSynthesis.speak(utterance);
     }
 
     function onShortAudio() {
       console.log("Short audio");
-      const audio = new Audio(shortAudio);
-      audio.play();
+      const utterance = new SpeechSynthesisUtterance(
+        "Hey there! Ready to help you out. You can ask to help identify objects around you, " +
+        "fire away!"
+      );
+      speechSynthesis.speak(utterance);
     }
 
     const removeHandlers = [
@@ -71,6 +84,7 @@ export function MicrophoneSetup() {
       addHandler("no-audio", onNoAudio),
       addHandler("long-audio", onLongAudio),
       addHandler("short-audio", onShortAudio),
+      addHandler("text", onText),
     ];
 
     return () => {
@@ -99,9 +113,8 @@ export default function Microphone() {
     state.stream,
   ]);
   const {
-    capture: camCapture,
+    snap: camSnap,
     capturing: camCapturing,
-    clearCapture: clearCamCapture,
   } = useWebcamCapture();
   const [camDevice, camStream] = useWebcam((state) => [
     state.selectedDevice,
@@ -121,25 +134,23 @@ export default function Microphone() {
     if (recording && camDevice) {
       console.log("Getting clip");
       Promise.resolve(camStream).then((stream) => {
-        camCapture(stream, 1000).then((clip) => {
-          console.log("Got clip");
-          clearCamCapture();
+        camSnap(stream, 10, 90).then((images) => {
+          console.log(`Got ${images.length} images`);
           console.log(
             `Sending query with ${recording.type} audio of ${
               recording.size / 1024
-            }kb and ${clip.type} video of ${clip.size / 1024}kb`
+            }kb and ${images.length} images.`
           );
           setRecording(null);
           socket.emit(
-            "query",
+            "query_with_images",
             { raw: recording, mimetype: recording.type },
-            { raw: clip, mimetype: clip.type },
-            "url"
+            images.map((image) => ({ raw: image, mimetype: "image/png" })),
           );
         });
       });
     }
-  }, [recording, camDevice, camCapture, clearCamCapture, camStream]);
+  }, [recording, camDevice, camStream]);
 
   async function startRecording() {
     if (micDisabled || isActive) return;
