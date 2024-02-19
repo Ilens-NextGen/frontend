@@ -4,6 +4,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import './App.css'
+import Home from './components/Home.jsx';
+import { useEffect, useState } from 'react';
+import { socket } from './socket';
 
 import Welcome from "./pages/Welcome";
 import Home from './pages/Home.jsx';
